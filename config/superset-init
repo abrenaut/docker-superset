@@ -1,0 +1,17 @@
+#!/bin/bash
+
+set -e
+
+echo "Creating admin user"
+fabmanager create-admin --app superset --username admin --firstname admin --lastname user --email admin@fab.org --password ${ADMIN_PASSWORD}
+
+# Initialize the database
+echo "Initializing the database"
+superset db upgrade
+
+# Create default roles and permissions
+echo "Creating default roles and permissions"
+superset init
+
+echo "Starting superset"
+gunicorn superset:app
